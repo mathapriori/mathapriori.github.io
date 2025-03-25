@@ -118,12 +118,12 @@
         let zoomCenterX = -0.67;
         let zoomCenterY = 0.4585;
         let isZooming = true;
-        let frameRate = 30;
+        let frameRate = 60;
         let interval = 1000 / frameRate;
         let previousTime = 0;
         let initialRangeX;
         let baseMaxIter = 30;
-        let alpha = 0.02;
+        let alpha = 0.01;
         
         function resizeCanvas() {
             canvas.width = window.innerWidth;
