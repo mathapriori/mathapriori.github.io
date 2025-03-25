@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarbajit Ghosh - Mathematician</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cascadia+Code&display=swap');
+        body {
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            font-family: 'Cascadia Code', monospace;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        #content {
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            top: auto;
+            left: auto;
+            margin-bottom: 50px;
+        }
+        #header {
+            font-size: 64px;
+            font-weight: bold;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        #header span {
+            font-size: 24px;
+            font-weight: normal;
+            margin-top: 10px;
+        }
+        #about {
+            font-size: 20px;
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+        #nav {
+            font-size: 24px;
+            text-align: right;
+        }
+        #nav a {
+            color: white;
+            text-decoration: underline;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .social-links {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding-bottom: 20px;
+            gap: 20px;
+        }
+        .social-links a {
+            color: white;
+            text-decoration: underline;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="mandelbrotCanvas"></canvas>
+    <div id="content">
+        <div>
+            <div id="header">
+                Sarbajit Ghosh
+                <span>(Sarbi)</span>
+            </div>
+            <div style="height: 20px;"></div>
+            <div id="about"> Mathematician - philosopher in training.</div>
+        </div>
+        <div id="nav">
+            <a href="#cv">CV</a>
+            <a href="#books">Books</a>
+            <a href="#projects">Projects</a>
+            <a href="#thoughts">Thoughts</a>
+        </div>
+    </div>
+    <div class="social-links">
+        <a href="https://github.com/sarbajitghosh20" target="_blank">GitHub</a>
+        <a href="https://bsky.app/profile/sarbajitghosh.bsky.social" target="_blank">Bluesky</a>
+        <a href="https://www.goodreads.com/user/show/171673232-sarbajit-ghosh" target="_blank">Goodreads</a>
+        <a href="https://letterboxd.com/sarbajitghosh/" target="_blank">Letterboxd</a>
+        <a href="https://mathstodon.xyz/@sarbajitghosh" target="_blank">Mathstodon</a>
+    </div>
+    <script>
+        const canvas = document.getElementById("mandelbrotCanvas");
+        const ctx = canvas.getContext("2d");
+        let minX = -2.5, maxX = 1, minY = -1, maxY = 1;
+        let maxIter = 30;
+        let zoomFactor = 0.995;
+        let zoomCenterX = -0.67;
+        let zoomCenterY = 0.4585;
+        let isZooming = true;
+        let frameRate = 60;
+        let interval = 1000 / frameRate;
+        let previousTime = 0;
+        let initialRangeX;
+        let baseMaxIter = 30;
+        let alpha = 0.02;
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawMandelbrot();
+        }
+        
+        function mandelbrot(c, iter) {
+            let z = { x: 0, y: 0 };
+            let n = 0;
+            while (n < iter) {
+                let xNew = z.x * z.x - z.y * z.y + c.x;
+                let yNew = 2 * z.x * z.y + c.y;
+                z.x = xNew;
+                z.y = yNew;
+                if (z.x * z.x + z.y * z.y > 4) break;
+                n++;
+            }
+            return n;
+        }
+        
+        function drawMandelbrot(currentTime) {
+            if (!isZooming) return;
+            
+            const deltaTime = currentTime - previousTime;
+            
+            if (deltaTime > interval) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imgData.data;
+                
+                for (let px = 0; px < canvas.width; px++) {
+                    for (let py = 0; py < canvas.height; py++) {
+                        let x0 = minX + (px / canvas.width) * (maxX - minX);
+                        let y0 = minY + (py / canvas.height) * (maxY - minY);
+                        let m = mandelbrot({ x: x0, y: y0 }, maxIter);
+                        let color = m === maxIter ? 0 : (255 * m / maxIter);
+                        let index = (py * canvas.width + px) * 4;
+                        pixels[index] = 0;
+                        pixels[index + 1] = 0;
+                        pixels[index + 2] = color;
+                        pixels[index + 3] = 255;
+                    }
+                }
+                ctx.putImageData(imgData, 0, 0);
+                
+                let rangeX = maxX - minX;
+                let rangeY = maxY - minY;
+                
+                if (initialRangeX === undefined) {
+                    initialRangeX = rangeX;
+                }
+                
+                const minZoomFactor = 0.95;
+                zoomFactor = Math.max(minZoomFactor, 1 - (rangeX / initialRangeX) * alpha);
+                
+                let newRangeX = rangeX * zoomFactor;
+                let newRangeY = rangeY * zoomFactor;
+                
+                minX = zoomCenterX - (zoomCenterX - minX) * zoomFactor;
+                maxX = zoomCenterX + (maxX - zoomCenterX) * zoomFactor;
+                minY = zoomCenterY - (zoomCenterY - minY) * zoomFactor;
+                maxY = zoomCenterY + (maxY - zoomCenterY) * zoomFactor;
+                
+                if (rangeX < 0.1) {
+                    maxIter = Math.min(maxIter + 2, 200);
+                }
+                
+                previousTime = currentTime;
+            }
+            
+            if (isZooming) {
+                requestAnimationFrame(drawMandelbrot);
+            }
+        }
+        
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+        requestAnimationFrame(drawMandelbrot);
+        
+    </script>
+</body>
+</html>
