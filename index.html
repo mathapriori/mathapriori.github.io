@@ -17,6 +17,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            font-size: 1vw; /* Base font size relative to viewport width */
         }
         canvas {
             display: block;
@@ -36,9 +37,11 @@
             top: auto;
             left: auto;
             margin-bottom: 50px;
+            flex-direction: column;
+            align-items: flex-start;
         }
         #header {
-            font-size: 64px;
+            font-size: 6.4vw; /* Relative to viewport width */
             font-weight: bold;
             text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
             display: flex;
@@ -46,27 +49,28 @@
             align-items: flex-start;
         }
         #header span {
-            font-size: 24px;
+            font-size: 2.4vw;
             font-weight: normal;
-            margin-top: 10px;
+            margin-top: 0.5vw;
         }
         #about {
-            font-size: 20px;
+            font-size: 2vw;
             line-height: 1.5;
-            margin-top: 10px;
+            margin-top: 1vw;
         }
         #nav {
-            font-size: 24px;
-            text-align: right;
+            font-size: 1.8vw; /* Slightly smaller than #about */
+            text-align: left;
+            margin-top: 2vw;
         }
         #nav a {
             color: white;
             text-decoration: underline;
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 0.5vw;
         }
         .social-links {
-            margin-top: 50px;
+            margin-top: 3vw;
             display: flex;
             justify-content: center;
             align-items: flex-end;
@@ -74,13 +78,43 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            padding-bottom: 20px;
-            gap: 20px;
+            padding-bottom: 1vw;
+            gap: 2vw;
         }
         .social-links a {
             color: white;
             text-decoration: underline;
-            font-size: 16px;
+            font-size: 1.6vw;
+        }
+
+        /* Media query for mobile devices (tablets and phones) */
+        @media (max-width: 768px) {
+            body {
+                font-size: 3vw; /* Adjust base font size for mobile */
+            }
+            #content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            #nav {
+                text-align: left;
+                margin-top: 2vw;
+            }
+            #header {
+                font-size: 8vw; /* Adjust for mobile */
+            }
+            #header span {
+                font-size: 3vw;
+            }
+            #about {
+                font-size: 2.5vw; /* Adjust for mobile */
+            }
+             #nav {
+                font-size: 2.3vw;
+            }
+            .social-links a {
+                font-size: 2vw;
+            }
         }
     </style>
 </head>
