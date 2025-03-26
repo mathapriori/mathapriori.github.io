@@ -41,7 +41,7 @@
             align-items: flex-start;
         }
         #header {
-            font-size: 6.4vw; /* Relative to viewport width */
+            font-size: clamp(2rem, 6.4vw, 5rem); /* Relative to viewport width */
             font-weight: bold;
             text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
             display: flex;
@@ -49,17 +49,17 @@
             align-items: flex-start;
         }
         #header span {
-            font-size: 2.4vw;
+            font-size: clamp(1rem, 2.4vw, 2rem);;
             font-weight: normal;
             margin-top: 0.5vw;
         }
         #about {
-            font-size: 2vw;
+            font-size: clamp(1rem, 2vw, 1.8rem);
             line-height: 1.5;
             margin-top: 1vw;
         }
         #nav {
-            font-size: 1.8vw; /* Slightly smaller than #about */
+            font-size: clamp(1rem, 1.8vw, 1.6rem); /* Slightly smaller than #about */
             text-align: left;
             margin-top: 2vw;
         }
@@ -68,6 +68,7 @@
             text-decoration: underline;
             display: block;
             margin-bottom: 0.5vw;
+            font-size: clamp(0.9rem, 1.6vw, 1.4rem);
         }
         .social-links {
             margin-top: 3vw;
@@ -84,7 +85,7 @@
         .social-links a {
             color: white;
             text-decoration: underline;
-            font-size: 1.6vw;
+            font-size: clamp(0.9rem, 1.6vw, 1.4rem);
         }
 
         /* Media query for mobile devices (tablets and phones) */
