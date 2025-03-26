@@ -112,6 +112,11 @@
              #nav {
                 font-size: 2.3vw;
             }
+            .social-links {
+                position: relative; /* Change to relative positioning */
+                bottom: auto;      /* Remove absolute bottom positioning */
+                margin-top: 5vw;  /* Add top margin to move it up */
+            }
             .social-links a {
                 font-size: 2vw;
             }
@@ -146,7 +151,7 @@
     <script>
         const canvas = document.getElementById("mandelbrotCanvas");
         const ctx = canvas.getContext("2d");
-        let minX = -2.5, maxX = 1, minY = -1, maxY = 1;
+        let minX, maxX, minY, maxY; // Declare but don't initialize here.
         let maxIter = 30;
         let zoomFactor = 0.995;
         let zoomCenterX = -0.67;
@@ -162,6 +167,25 @@
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+
+            // Calculate the aspect ratio
+            const aspectRatio = canvas.width / canvas.height;
+
+            // Adjust the Mandelbrot set boundaries based on the aspect ratio.
+            if (aspectRatio > 1) {
+                // Wider than tall, so adjust X
+                minX = -2.5;
+                maxX = 1;
+                minY = -1.25 / aspectRatio;  // Adjust minY and maxY to fit
+                maxY = 1.25 / aspectRatio;
+            } else {
+                // Taller than wide, so adjust Y
+                minY = -1.25;
+                maxY = 1.25;
+                minX = -2.5 * aspectRatio; // Adjust minX and maxX to fit
+                maxX = 1 * aspectRatio;
+            }
+            
             drawMandelbrot();
         }
         
